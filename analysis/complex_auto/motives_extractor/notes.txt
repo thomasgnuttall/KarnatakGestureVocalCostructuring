@@ -1,0 +1,9 @@
+1) With the new approach we are using the pipeline is in good shape...
+	a) Train convolutional auto encoder, takes a long time but once trained can be used quite quickly on any recording
+	b) Use model to compute abstract audio features in sliding windows across recordings
+	c) Compute similarity matrix between recordings and themselves (or other recordings) using these features.
+	d) Regions of consistent self similarity are identified automatically and assumed to be patterns
+		- These are variable length
+	f) Output groups of patterns and occurrences with timestamps, durations and significance
+2) Have managed to get setup on the HPC and can use this for development. Created docker image to for deploy process, though haven’t actually trained a final (big) model yet.
+3) Discussed with Lara what a final interface to interact with the results would look like/what would be useful. We agree that querying is probably most useful, i.e. a user identifies a phrase/region and asks to be returned all occurrences across all recordings, this can be broken down by performer, raga etc… I have been experimenting with this to create a basic version, where the features from step 1b are stored in a database and used to do quick lookups. It is quite simple and works OK however it is hard to tell what would be feasible in realtime on a web server, it would be useful to speak to app developer, we can discuss this more in September I guess.
