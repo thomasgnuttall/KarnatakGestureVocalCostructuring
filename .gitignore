@@ -1,4 +1,4 @@
-./analysis/data/audio/*
-./analysis/data/mocap/*
-./analysis/data/pitch_tracks/*
-./analysis/data/stability_tracks/*
+analysis/data/audio/*
+analysis/data/mocap/*
+analysis/data/pitch_tracks/*
+analysis/data/stability_tracks/*
