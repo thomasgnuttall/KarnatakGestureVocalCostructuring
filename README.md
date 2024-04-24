@@ -1,6 +1,6 @@
 # Landscapes of coarticulation: The co-structuring of gesture-vocal dynamics in Karnatak vocal performance
 
-![alt text](https://github.com/thomasgnuttall/coarticulation_landscapes/tree/main/overviewfigure.png?raw=true)
+![figureoverview](https://github.com/thomasgnuttall/coarticulation_landscapes/blob/main/images/overviewfigure.png?raw=true)
 
 This repository contains the accompanying code for the analysis and visualisation presented in,
 
