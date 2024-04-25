@@ -7,7 +7,9 @@ In this folder is the code corresponding to the two analyses:
 
 The code for each pipeline step can be found in the scripts in the `experiments` folder.
 
-It is necessary to download two datasets to use this code, one corresponding to the performance audios (\<link removed for blind review>), and one corresponding to the motion capture data (MOCAP) of the performers movement during performance (\<link removed for blind review>). Please update the file `experiments/conf.py` with the path corresponding to this data. 
+It is necessary to download two datasets to use this code, one corresponding to the performance audios and one corresponding to the motion capture data (MOCAP) of the performers movement during performance. Both can be found [here](https://owncloud.gwdg.de/index.php/s/CcTprqZ7dAFIg8Q). The data in the Audio folder should be placed in `data/audio` and the data in the Motion Capture folder should be placed in `data/mocap`.
+
+Please ensure the file `experiments/conf.py` is updated with the paths corresponding to this data.
 
 ## Pipeline
 The pipeline consists of 12 scripts:
