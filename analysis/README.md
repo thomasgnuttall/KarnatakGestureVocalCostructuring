@@ -18,7 +18,7 @@ The pipeline consists of 12 scripts:
 | 3_get_patterns.py |  Extract repeated melodic motifs from self similarity matrices|
 | 4_get_distance_between_patterns.py | Compute DTW distance between pitch tracks corresponding to identified melodic motifs |
 | 5_acceleration_analysis.py |  Process mocap data and compute distances between kinematic motifs co-occurring with melodic motifs|
-| 6_pitch_features.py | Extract loudness and spectral centroid time series from audio anmd compute pairwise DTW distances |
+| 6_pitch_features.py | Extract loudness and spectral centroid time series from audio and compute pairwise DTW distances |
 |7_correlations.py |  Correlations for analysis 1|
 |8_regression_analysis.py |  Regression models for analysis 2|
 |9_classification_analysis.py|  Classification models for analysis 2|
