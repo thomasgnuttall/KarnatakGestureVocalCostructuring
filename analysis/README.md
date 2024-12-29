@@ -5,13 +5,16 @@ In this folder is the code corresponding to the two analyses:
 1. Do sonic motif DTW distances covary with spatiotemporal patterns of gesture?
 2. Can sonic features be predicted from combined gesture features?
 
-The code for each pipeline step can be found in the scripts in the `experiments` folder.
+The code for each pipeline step can be found in the scripts in the `experiments/alapana_datasets_analysis` folder.
 
-It is necessary to download two datasets to use this code, one corresponding to the performance audios and one corresponding to the motion capture data (MOCAP) of the performers movement during performance. Both can be found [here](https://owncloud.gwdg.de/index.php/s/CcTprqZ7dAFIg8Q). The data in the Audio folder should be placed in `data/audio` and the data in the Motion Capture folder should be placed in `data/mocap`.
+## Data
+It is necessary to download two datasets to use this code, one corresponding to the performance audios and one corresponding to the motion capture data (MOCAP) of the performers movement during performance. Both can be found [here](https://owncloud.gwdg.de/index.php/s/CcTprqZ7dAFIg8Q). 
+
+The data in the Audio folder should be placed in `data/audio` and the data in the Motion Capture folder should be placed in `data/mocap`.
 
 Please ensure the file `experiments/conf.py` is updated with the paths corresponding to this data.
 
-## Pipeline
+## Pipeline Overview
 The pipeline consists of 12 scripts:
 | Name |Purpose  |
 |--|--|
@@ -28,4 +31,12 @@ The pipeline consists of 12 scripts:
 |11_reg_plots_for_paper.py |  Generate plots for analysis 2|
 |12_radar_reg_plots_for_paper.py|  Generate plots for analysis 2|
 
+
+## Individual Scripts
+
+These numbered sections correspond to the scripts in the table above.
+
+### 1. Predominant Pitch Extraction
+
+Extract predominant pitch strack and identify sung regions
 
