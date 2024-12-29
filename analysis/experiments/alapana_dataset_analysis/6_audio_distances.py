@@ -25,7 +25,7 @@ sr = 44100
 
 out_dir = f'{out_dir}/{run_name}/'
 
-metadata_path = 'audio/lara_wim2/info.csv'
+metadata_path = os.path.join(root_dir, 'data', 'metadata.csv')
 metadata = pd.read_csv(metadata_path)
 metadata = metadata[~metadata['Audio file'].isnull()]
 metadata = metadata[~metadata['Tonic'].isnull()]
@@ -121,6 +121,7 @@ def compute_novelty_spectrum(x, Fs=44100, N=1024, H=512, gamma=200.0, M=10, norm
 
 mel = lambda f: 1/np.log(2) * (np.log(1 + (f/1000))) * 1000
 
+# Iteratively extract spectral centroid and loudness
 # distance from tonic tracks
 dtonic_tracks = {}
 # spectral flux tracks
@@ -168,31 +169,6 @@ for t in all_groups['track'].unique():
 
 
 
-# window_size = 2048
-# loudness = get_loudness(y, window_size)
-# step = len(y)/len(loudness)
-# loudness_smooth = gaussian_filter1d(loudness, 10)
-# loudness_smooth -= loudness_smooth.min()
-
-# s1=176
-# s2=186
-# sr=44100
-# ltrack = loudness_smooth[int(s1*sr/step):int(s2*sr/step)]
-# atrack = y[int(s1*sr):int(s2*sr)]
-# import matplotlib.pyplot as plt
-
-# plt.plot(list(range(len(ltrack))), ltrack)
-# plt.ylabel('Normalised Loudness (dB)')
-# plt.xlabel('Time')
-# plt.savefig('loudness_smooth.png')
-# plt.clf()
-# # Write out audio as 24bit PCM WAV
-# sf.write('loudness_smooth.wav', atrack, sr, subtype='PCM_24')
-
-
-
-
-
 audio_distances_path = os.path.join(out_dir, 'audio_distances.csv')
 
 try:
@@ -202,6 +178,7 @@ except OSError:
     pass
 create_if_not_exists(audio_distances_path)
 
+# Iteratively compute pairwise distances
 ##text=List of strings to be written to file
 header = 'index1,index2,loudness_dtw,distance_from_tonic_dtw,spectral_centroid'
 with open(audio_distances_path,'a') as file:

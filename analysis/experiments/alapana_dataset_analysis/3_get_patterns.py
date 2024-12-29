@@ -3,8 +3,7 @@ from experiments.alapana_dataset_analysis.main import main
 from experiments.alapana_dataset_analysis.conf import out_dir, root_dir
 import faulthandler
 
-from experiments.alapana_dataset_analysis.conf import out_dir, root_dir
-
+# Default parameters from original paper
 faulthandler.enable()
 sr = 44100
 cqt_window = 1984
@@ -35,10 +34,10 @@ perc_tail = 0.5
 plot = False
 min_pattern_length_seconds = 1.5
 
-group_len_var = 1 # Current Best: 1
-thresh_dtw = 4.5 # Current Best: 8
-dupl_perc_overlap_intra = 0.6 # Current Best: 0.6
-dupl_perc_overlap_inter = 0.8 # Current Best: 0.75
+group_len_var = 1
+thresh_dtw = 4.5 
+dupl_perc_overlap_intra = 0.6
+dupl_perc_overlap_inter = 0.8
 
 
 track_names = [
@@ -87,6 +86,10 @@ track_names = [
     'Performer1_Sess2_Atana',
     'Performer3_Sess2_Todi'
 ]
+
+# Extract and store patterns for each track
+# This code is better followed using the notebook presented here
+#   https://mtg.github.io/IAM-tutorial-ismir22/melodic_analysis/melodic-pattern-discovery.html
 bin_thresh = 0.045 # parameter tuned on a track basis
 total = len(track_names)
 bin_thresh_segment = bin_thresh*0.75
@@ -100,8 +103,6 @@ main(
     dupl_perc_overlap_inter, dupl_perc_overlap_intra, None,
     None, partial_perc, top_n, True,
     write_audio, write_patterns, False, plot=False)
-
-
 
 
 

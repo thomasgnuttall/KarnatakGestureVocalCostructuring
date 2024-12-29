@@ -22,14 +22,13 @@ The pipeline consists of 12 scripts:
 | 2_CAE_feature_extraction.py | Encode audio using auto encoder and compute self similarity for motif finding|
 | 3_get_patterns.py |  Extract repeated melodic motifs from self similarity matrices|
 | 4_get_distance_between_patterns.py | Compute DTW distance between pitch tracks corresponding to identified melodic motifs |
-| 5_acceleration_analysis.py |  Process mocap data and compute distances between kinematic motifs co-occurring with melodic motifs|
-| 6_pitch_features.py | Extract loudness and spectral centroid time series from audio and compute pairwise DTW distances |
+| 5_kinematic_distances.py |  Process mocap data and compute distances between kinematic motifs co-occurring with melodic motifs|
+| 6_audio_distances.py | Extract loudness and spectral centroid time series from audio and compute pairwise DTW distances |
 |7_correlations.py |  Correlations for analysis 1|
 |8_regression_analysis.py |  Regression models for analysis 2|
-|9_classification_analysis.py|  Classification models for analysis 2|
-|10_plots_for_paper.py  |  Generate plots for analysis 1|
-|11_reg_plots_for_paper.py |  Generate plots for analysis 2|
-|12_radar_reg_plots_for_paper.py|  Generate plots for analysis 2|
+|9_plots_for_paper.py  |  Generate plots for analysis 1|
+|10_reg_plots_for_paper.py |  Generate plots for analysis 2|
+|11_radar_reg_plots_for_paper.py|  Generate plots for analysis 2|
 
 
 ## Individual Scripts
@@ -38,5 +37,64 @@ These numbered sections correspond to the scripts in the table above.
 
 ### 1. Predominant Pitch Extraction
 
-Extract predominant pitch strack and identify sung regions
+Extract predominant pitch track using the [compIAM](https://github.com/MTG/compIAM) package. Stable and silent regions of this pitch track are also identified and stored. These are used for the downstream similarity analyses and for excluding uninteresting regions in the pattern finding process.
 
+### 2. CAE Feature Extraction
+
+Extract latent melodic features using the autoencoder trained on a Carnatic music corpus, available as part of the [compIAM](https://github.com/MTG/compIAM) package. These features have been shown to correspond to aspects of the sung melody relevant to melodic pattern finding. 
+
+The melodic pattern finding process corresponding to this step and the next one is presented in...
+
+Thomas Nuttall, Genís Plaja, Lara Pearson, Xavier Serra. “In Search of Sañcaras: Tradition-Informed Repeated Melodic Pattern Recognition in Carnatic Music.” Proceedings of the 23rd International Society for Music Information Retrieval Conference, ISMIR 2022 [[pdf](https://repositori-api.upf.edu/api/core/bitstreams/cca68db1-8203-45d4-8c8c-b2b75c606679/content)]
+
+The original pattern finding model implementation is presented in 
+
+Stefan Lattner, Andreas Arzt, Monika Dörfler. "Learning Complex Basis Functions for Invariant Representations of Audio." Proceedings of the 20th International Society for Music Information Retrieval Conference, ISMIR 2019. [[pdf](https://arxiv.org/pdf/1907.05982)]
+
+A visual walkthrough of this pipeline step and the next one can be found in the compIAM documentation [here](https://mtg.github.io/IAM-tutorial-ismir22/melodic_analysis/melodic-pattern-discovery.html).
+
+### 3. Melodic Pattern Finding 
+
+Using self-similarity on the features extracted in the previous section, identified regions of repeated melodic motifs.
+
+The melodic pattern finding process corresponding to this step and the next one is presented in...
+
+Thomas Nuttall, Genís Plaja, Lara Pearson, Xavier Serra. “In Search of Sañcaras: Tradition-Informed Repeated Melodic Pattern Recognition in Carnatic Music.” Proceedings of the 23rd International Society for Music Information Retrieval Conference, ISMIR 2022 [[pdf](https://repositori-api.upf.edu/api/core/bitstreams/cca68db1-8203-45d4-8c8c-b2b75c606679/content)]
+
+The original pattern finding model implementation is presented in 
+
+Stefan Lattner, Andreas Arzt, Monika Dörfler. "Learning Complex Basis Functions for Invariant Representations of Audio." Proceedings of the 20th International Society for Music Information Retrieval Conference, ISMIR 2019. [[pdf](https://arxiv.org/pdf/1907.05982)]
+
+A visual walkthrough of this pipeline step and the subsequent one can be found in the compIAM documentation [here](https://mtg.github.io/IAM-tutorial-ismir22/melodic_analysis/melodic-pattern-discovery.html).
+
+### 4. Get Distance Between Patterns
+
+Compute the DTW distance between each pairwise combination of automatically identified melodic patterns. The dynamic time warping implementation is found in `dtw.py:dtw_path`. 
+
+### 5. Kinematic Distances
+
+Load the mocap data and normalise. For each region of the kinematic track that corresponds to the melodic motifs identified in the previous sections. Position, velocity, and acceleration tracks for the hand and head are normalised such that the performers are all facing in the same direction with respect to the origin and such that all motifs have the same "handedness".
+
+### 6. Audio Distances
+
+For each melodic motif exctract the loudness and spectral centroid time series. Normalise and compute the pairwise distance between these tracks. The output of this script is the final distances dataframe upon which all analyses are performed.
+
+### 7. Correlations
+
+Analysis 1 script.
+
+### 8. Regression Analysis
+
+Analysis 2 script.
+
+### 9. Plots for Paper
+
+Generate correlation plots for Analysis 1
+
+### 10. Regression Plots for Paper
+
+Generate regression plots for Analysis 2
+
+### 11. Radar Plots
+
+Generate radar plots for Analysis 2

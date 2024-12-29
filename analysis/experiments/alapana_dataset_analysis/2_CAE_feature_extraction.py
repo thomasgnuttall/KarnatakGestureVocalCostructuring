@@ -7,6 +7,8 @@ from convert import *
 from exploration.pitch import *
 from exploration.io import *
 from experiments.alapana_dataset_analysis.conf import out_dir, root_dir
+
+# Default parameters from In Search for Sancaras paper
 run_keyword= 'hpc'
 
 cache_dir = "cache"
@@ -63,6 +65,7 @@ scales = 0, 0
 transform = 0, 1
 
 
+# Initialise saved model
 torch.manual_seed(seed)
 np.random.seed(seed)
 if cuda:
@@ -109,7 +112,9 @@ hop_length=1984
 step_size=1
 mode='cosine'
 
-
+# Iterate through performances and extract features.
+# This code has since been incorporated into the compIAM API, a walkthrough is available
+# here: https://mtg.github.io/IAM-tutorial-ismir22/melodic_analysis/melodic-pattern-discovery.html
 for i_path in range(len(all_paths)):
     try:
         (title, raga, tonic), (file, mask_file, pitch_file) = all_paths[i_path]

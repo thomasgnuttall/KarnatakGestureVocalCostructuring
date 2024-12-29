@@ -6,14 +6,15 @@ import numpy as np
 import fastdtw
 
 import dtaidistance.dtw
-from experiments.alapana_dataset_analysis.dtw import dtw_path, dtw_dtai
+from experiments.alapana_dataset_analysis.dtw import dtw_path
 from exploration.io import write_pkl, load_pkl
 from scipy.signal import savgol_filter
 
 from experiments.alapana_dataset_analysis.conf import out_dir, root_dir, run_name, metadata_path, mocap_dir
 
-r=0.1
+r = 0.1 # Sakoe-chiba radius for DTW computations
 
+# mapping of mocap segments to body parts, those marked as importannt are used in this analysis
 segment_mapping = {
     'Seg_1':  'Pelvis', # important
     'Seg_2':  'L5',
@@ -40,7 +41,7 @@ segment_mapping = {
     'Seg_23':  'LeftToe'
 }
 
-
+# Functions for mocap normalisation.
 def pivot_mocap(df):
     df = df.pivot_table(
         values=['x','y','z'], 
@@ -175,6 +176,7 @@ desirable_segments = ['Seg_1', 'Seg_10', 'Seg_11', 'Seg_14', 'Seg_15', 'Seg_8', 
 
 mocap_paths = list_dir(mocap_dir, ['.txt'])
 
+# Iteratively load motion tracks and pivot dataframe to wide format 
 columns = ['time', 'time_ms', 'feature', 'segment', 'x', 'y', 'z']
 mocap = {}
 for mp in tqdm.tqdm(mocap_paths):
@@ -193,7 +195,7 @@ for mp in tqdm.tqdm(mocap_paths):
 
     mocap[mp] = df
 
-# Load existing data 
+# Load existing data (motifs and distances)
 distances_path = f'{out_dir}/{run_name}/distances.csv'
 all_groups_path = f'{out_dir}/{run_name}/all_groups.csv'
 gest_path = f'{out_dir}/{run_name}/distances_gestures.csv'
@@ -250,7 +252,7 @@ def add_centroid(distances, all_groups, feature, performance):
     distances = distances.rename({f'{feature}_centroid':f'{feature}2'}, axis=1)
     return distances
 
-
+# For each motif compute the spatial center for each body part
 distances = add_centroid(distances, all_groups, 'Pelvis', False)
 distances = add_centroid(distances, all_groups, 'Neck', True)
 distances = add_centroid(distances, all_groups, 'RightShoulder', True)
@@ -261,6 +263,7 @@ distances = add_centroid(distances, all_groups, 'LeftHand', False)
 
 
 distances2 = distances
+
 # Angle
 theta = lambda x0, y0, x1, y1: np.arctan2((y1 - y0), (x1 - x0))
 # distance
@@ -386,7 +389,7 @@ index_features_path = f'{out_dir}/{run_name}/index_features.pkl'
 
 write_pkl(index_features, index_features_path)
 
-
+# Compute pairwise distances
 print("acceleration hand")
 print('    1d dtw')
 distances2['1daccelerationDTWHand'] = distances2.apply(lambda y: get_motion_distance(y['index1'], y['index2'],'1daccelerationDTWHand', norm=False), axis=1)

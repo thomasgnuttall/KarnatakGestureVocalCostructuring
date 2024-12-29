@@ -1,7 +1,4 @@
 import pandas as pd
-from exploration.pitch import get_timeseries, pitch_seq_to_cents,interpolate_below_length
-from exploration.io import create_if_not_exists
-import pandas as pd
 import matplotlib.pyplot as plt
 import numpy
 import librosa
@@ -14,10 +11,13 @@ from experiments.alapana_dataset_analysis.dtw import dtw_path, dtw_dtai
 from scipy.ndimage import gaussian_filter1d
 
 from experiments.alapana_dataset_analysis.conf import out_dir, root_dir, run_name
+from exploration.pitch import get_timeseries, pitch_seq_to_cents,interpolate_below_length
+from exploration.io import create_if_not_exists
 
 out_dir = f'{out_dir}/{run_name}/'
 
-# 2018_11_19 bad voice
+r=0.1 # sakoe-chiba radius
+
 track_names = [
     'Performer2_Sess1_AnandabhairaviC',
     'Performer3_Sess1_BilahariB',
@@ -65,7 +65,7 @@ track_names = [
     'Performer3_Sess2_Todi'
 ]
 
-metadata_path = 'audio/lara_wim2/info.csv'
+metadata_path = os.path.join(root_dir, 'data', 'metadata.csv')
 metadata = pd.read_csv(metadata_path)
 metadata = metadata[~metadata['Audio file'].isnull()]
 metadata = metadata[~metadata['Tonic'].isnull()]
@@ -86,6 +86,7 @@ def get_derivative(pitch, time):
 
     return d_pitch, d_time
 
+# Iteratively load pitch tracks
 pitch_tracks = {}
 for t in track_names:
     p_path = f'./data/pitch_tracks/alapana/{t}.csv'
@@ -126,7 +127,7 @@ def smooth(pitch, time, timestep, wms=125):
     return interp, time2
 
 
-r=0.1
+# Iteratively compute dtw distane between each pattern, saving directly to file 
 
 ##text=List of strings to be written to file
 header = 'index1,index2,pitch_dtw,pitch_dtw_mean,diff_pitch_dtw'
@@ -192,24 +193,6 @@ with open(distances_path,'a') as file:
             dtw_norm_diff = dtw_val/l
 
             line =f"{qi},{rj},{dtw_norm},{dtw_norm_mean},{dtw_norm_diff}"
-            #all_distances = all_distances.append({
-            #   'index1':i,
-            #   'index2':j,
-            #   'path1_start':path1_start,
-            #   'path1_end':path1_end,
-            #   'path2_start':path2_start,
-            #   'path2_end':path2_end,
-            #   'path_length': l,
-            #   'dtw_distance':dtw_val,
-            #   'dtw_distance_norm':dtw_norm
-            #}, ignore_index=True)
             file.write(line)
             file.write('\n')
 
-            #plt.plot(pat1, range(len(pat1)))
-            #plot_path = f'plots/testing_smoothing/{qi}.png'
-            #create_if_not_exists(plot_path)
-            #plt.savefig(plot_path)
-            #plt.close('all')
-
-    #all_distances.reset_index(inplace=True, drop=True)
