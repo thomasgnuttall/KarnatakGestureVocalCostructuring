@@ -7,7 +7,25 @@ In this folder is the code corresponding to the two analyses:
 
 The code for each pipeline step can be found in the scripts in the `experiments/alapana_datasets_analysis` folder.
 
-## 1. Data
+## Pipeline Overview
+
+| Name |Purpose  |
+|--|--|
+| 2_pitch_and_mask_extract.py | Script to extract predominant pitch strack and identify sung regions |
+| 3_melodic_pattern_finding | External notebook for melodic pattern finding process|
+| 4_get_distance_between_patterns.py | Script to compute DTW distance between pitch tracks corresponding to identified melodic motifs |
+| 5_kinematic_distances.py | Script to process mocap data and compute distances between kinematic motifs co-occurring with melodic motifs|
+| 6_audio_distances.py | Script to extract loudness and spectral centroid time series from audio and compute pairwise DTW distances |
+|7_correlations.py | Script for correlations for analysis 1|
+|8_regression_analysis.py | Script for regression models for analysis 2|
+|9_plots_for_paper.py  |  Script to generate plots for analysis 1|
+|10_reg_plots_for_paper.py |  Script to generate plots for analysis 2|
+|11_radar_reg_plots_for_paper.py|  Script to generate plots for analysis 2|
+
+
+## Pipeline Steps
+
+### 1. Data
 It is necessary to download two datasets to use this code, one corresponding to the performance audios and one corresponding to the motion capture data (MOCAP) of the performers movement during performance. Both can be found [here](https://owncloud.gwdg.de/index.php/s/CcTprqZ7dAFIg8Q). 
 
 The data in the Audio folder should be placed in `data/audio` and the data in the Motion Capture folder should be placed in `data/mocap`.
@@ -15,27 +33,6 @@ The data in the Audio folder should be placed in `data/audio` and the data in th
 The metadata file should also be downloaded and stored at `data/metadata.csv`.
 
 Please ensure the file `experiments/conf.py` corresponds to these data locations, and if not, update it with the correct relative paths.
-
-## Pipeline Overview
-The pipeline consists of 10 scripts:
-| Name |Purpose  |
-|--|--|
-| 2_pitch_and_mask_extract.py | Extract predominant pitch strack and identify sung regions |
-| 4_get_distance_between_patterns.py | Compute DTW distance between pitch tracks corresponding to identified melodic motifs |
-| 5_kinematic_distances.py |  Process mocap data and compute distances between kinematic motifs co-occurring with melodic motifs|
-| 6_audio_distances.py | Extract loudness and spectral centroid time series from audio and compute pairwise DTW distances |
-|7_correlations.py |  Correlations for analysis 1|
-|8_regression_analysis.py |  Regression models for analysis 2|
-|9_plots_for_paper.py  |  Generate plots for analysis 1|
-|10_reg_plots_for_paper.py |  Generate plots for analysis 2|
-|11_radar_reg_plots_for_paper.py|  Generate plots for analysis 2|
-
-
-## Individual Scripts
-
-To reproduce the analysis, the the scripts should be ran as follows...
-
-Note; These numbered sections correspond to the scripts in the table above.
 
 ### 2. Predominant Pitch Extraction
 
