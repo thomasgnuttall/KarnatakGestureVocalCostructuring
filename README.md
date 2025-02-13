@@ -1,4 +1,4 @@
-# The Co-structuring of Gesture-vocal Dynamics in Karnatak Music Performance
+# The co-structuring of gesture-vocal dynamics: An exploration in Karnatak music performance
 
 <center>
   <img src="https://github.com/thomasgnuttall/coarticulation_landscapes/blob/main/images/overviewfigure.png?raw=true" alt="figureoverview" width="600">
