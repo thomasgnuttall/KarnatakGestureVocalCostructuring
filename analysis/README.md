@@ -16,8 +16,8 @@ The code for each pipeline step can be found in the scripts in the `experiments/
 | 4_get_distance_between_patterns.py | Script to compute DTW distance between pitch tracks corresponding to identified melodic motifs |
 | 5_kinematic_distances.py | Script to process mocap data and compute distances between kinematic motifs co-occurring with melodic motifs|
 | 6_audio_distances.py | Script to extract loudness and spectral centroid time series from audio and compute pairwise DTW distances |
-|7_correlations.py | Script for correlations for analysis 1|
-|8_regression_analysis.py | Script for regression models for analysis 2|
+|7_analysis_1.py | Script for correlations for analysis 1|
+|8_anakysis_2.py | Script for regression models for analysis 2|
 |9_plots_for_paper.py  |  Script to generate plots for analysis 1|
 |10_reg_plots_for_paper.py |  Script to generate plots for analysis 2|
 |11_radar_reg_plots_for_paper.py|  Script to generate plots for analysis 2|
