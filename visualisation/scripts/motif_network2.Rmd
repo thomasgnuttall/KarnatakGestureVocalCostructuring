@@ -1,0 +1,146 @@
+---
+title: "KarnatakGesture_VocalNetworks"
+author: "Wim Pouw"
+date: "5/7/2021"
+output: html_document
+---
+
+```{r setup, echo = FALSE, messsage = FALSE, warning= FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library(dtw)
+library(tsne)
+library(ggplot2)
+library(plotly)
+
+basefolder <- dirname(getwd())
+motifs <- read.csv(paste0(basefolder, "/motifs/all_groups.csv"))
+motifsdist <- read.csv(paste0(basefolder, "/motifs/distances_with_performers.csv"))
+snippets <- list.files(paste0(basefolder, "/videos_snipped_by_motifs/"), pattern = '*.mp4')
+
+#soundfiles <- paste0(basefolder, "/Main_Data/IDENTIFIABLE_audio/")
+#soundsamples <- paste0(basefolder, "/Main_Data/SoundSamples/")
+#fol_gesnet <- paste0(basefolder,"/Main_Data/MergedData/gesture_networks/")
+
+#distances
+#patdis<- read.csv(paste0(basefolder, '/distances_motifs/distances.csv'))
+#patdis <- patdis[!is.na(patdis$dtw_distance_norm) & (!patdis$dtw_distance_norm<0.000000001),]
+```
+
+
+# Build a single distance matrix of all the snippets
+
+```{r}
+library(stringr)
+library(Rtsne)
+
+
+snippetIDs <- str_remove(snippets, ".mp4")
+
+indices <- c(motifsdist$index1, motifsdist$index2)
+matpitch <- matacc2dc <- matspatial  <- matrix(NA, nrow=length(unique(indices)), ncol = length(unique(indices)), byrow=TRUE)
+
+colnames(matpitch) <- colnames(matacc2dc) <- colnames(matspatial) <- unique(indices)
+
+
+for(i in unique(motifsdist$index1))
+{
+  print(i)
+  indi <- which(colnames(matpitch)==i)
+  for(j in unique(motifsdist$index2))
+  {
+    indj <- which(colnames(matpitch)==j)
+    if(is.na(matpitch[indi,indj]))
+    {
+    ind <- which(motifsdist$index1==i & motifsdist$index2==j)
+      if(length(ind)>0)
+      {
+      dis1 <- motifsdist$pitch_dtw[ind]
+      matpitch[indi,indj] <-  dis1
+      matpitch[indj,indi] <-  dis1
+      
+      dis2 <- (motifsdist$X2daccelerationDTWForearm[ind]+motifsdist$X2daccelerationDTWHand[ind])/2
+      matacc2dc[indi,indj] <- dis2  
+      matacc2dc[indj,indi] <- dis2
+      
+      dis3 <- (motifsdist$X2dvelocityDTWForearm[ind]+motifsdist$X2dvelocityDTWHand[ind])/2
+      matspatial[indi,indj] <-  dis3
+      matspatial[indj,indi] <-  dis3
+      }
+    }
+  }
+}
+diag(matpitch)   <- 0
+diag(matacc2dc)  <- 0
+diag(matspatial) <- 0
+
+#remove all ID's that are not in the videolist
+matpitch <- matpitch[colnames(matpitch)%in%snippetIDs, colnames(matpitch)%in%snippetIDs]
+matacc2dc <- matacc2dc[colnames(matacc2dc)%in%snippetIDs, colnames(matacc2dc)%in%snippetIDs]
+matspatial <- matspatial[colnames(matspatial)%in%snippetIDs, colnames(matspatial)%in%snippetIDs]
+
+#if there is already a file, just read it in
+write.csv(matpitch, paste0(basefolder, '/scripts/output/motif_pitch_matrix.csv'))
+write.csv(matacc2dc, paste0(basefolder, '/scripts/output/motif_acc_combined_matrix.csv'))
+write.csv(matspatial, paste0(basefolder, '/scripts/output/motif_vel_matrix.csv'))
+
+
+#reorder the snippetID's
+snippetIDs <- snippetIDs[order(as.numeric(snippetIDs))]
+
+groupsvec <- performervec <- numeric()
+invididual <- index <- performance <- character()
+#now collect some info
+for(ID1 in colnames(matpitch))
+{
+  print(ID1)
+  index <- c(index, ID1)
+  #groupsvec <- c(groupsvec, motifs$group[motifs$index==as.numeric(ID1)])
+  track <-  motifs$track[motifs$index==as.numeric(ID1)]
+  performance <- c(performance, track)
+  individual <- sub("_am.*", "",track)
+  individual <- sub("_pm.*", "", individual ) 
+  individual <- sub("_Sec.*", "", individual ) 
+  if(individual=='2018_11_13'){performervec <- c(performervec, 'performer 1')}
+  if(individual=='2018_11_15'){performervec <- c(performervec, 'performer 2')}
+  if(individual=='2018_11_18'){performervec <- c(performervec, 'performer 3')}
+}
+
+
+#if there is already a file, just read it in
+matpitch   <- read.csv(paste0(basefolder, '/scripts/output/motif_pitch_matrix.csv'))
+matpitch <- matpitch[,-1]
+matacc2dc  <- read.csv(paste0(basefolder, '/scripts/output/motif_acc_combined_matrix.csv'))
+matacc2dc  <- matacc2dc[,-1]
+matspatial <- read.csv(paste0(basefolder, '/scripts/output/motif_vel_matrix.csv'))
+matspatial <- matspatial[,-1]
+
+###############################lets make a topology from the distance matrics using UMAP
+mat <- matpitch 
+mat[mat!=0] <- log(mat[mat!=0])
+results <- cmdscale(mat) #classic multidimensional scaling
+x_pitch <- results[,1]
+y_pitch <- results[,2]
+
+mat <- matacc2dc
+mat[mat!=0] <- log(mat[mat!=0])
+results <- cmdscale(mat) #classic multidimensional scaling
+x_acc <- results[,1]
+y_acc <- results[,2]
+
+mat <- matspatial
+mat[mat!=0] <- log(mat[mat!=0])
+results <- cmdscale(mat) #classic multidimensional scaling
+x_vel <- results[,1]
+y_vel <- results[,2]
+
+#appdata
+topdata <- cbind.data.frame(x_pitch,y_pitch, x_acc, y_acc, x_vel, y_vel, index, performervec, performance)
+colnames(topdata) <- c('X_pitch', 'Y_pitch', 'X_acc', 'Y_acc', 'X_vel', 'Y_vel', 'index', 'performer', 'performance')
+
+write.csv(topdata, paste0(basefolder, '/app/karnatakmultimodalmotifs/assets/data.csv'))
+write.csv(topdata, paste0(basefolder, '/app/karnatakmultimodalmotifs/data.csv'))
+```
+

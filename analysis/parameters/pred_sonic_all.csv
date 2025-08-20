@@ -1,0 +1,17 @@
+target,level,level_value,best_params,n_samples
+pitch_dtw,all,0,"{'learning_rate': 0.1, 'max_depth': 8, 'n_estimators': 50}",176715
+pitch_dtw,performer,Performer2,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 50}",6786
+pitch_dtw,performer,Performer3,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 100}",52326
+pitch_dtw,performer,Performer1,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 150}",11781
+diff_pitch_dtw,all,0,"{'learning_rate': 0.1, 'max_depth': 8, 'n_estimators': 50}",176715
+diff_pitch_dtw,performer,Performer2,"{'learning_rate': 0.1, 'max_depth': 2, 'n_estimators': 150}",6786
+diff_pitch_dtw,performer,Performer3,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 150}",52326
+diff_pitch_dtw,performer,Performer1,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 50}",11781
+loudness_dtw,all,0,"{'learning_rate': 0.1, 'max_depth': 8, 'n_estimators': 50}",176715
+loudness_dtw,performer,Performer2,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 50}",6786
+loudness_dtw,performer,Performer3,"{'learning_rate': 0.01, 'max_depth': 8, 'n_estimators': 200}",52326
+loudness_dtw,performer,Performer1,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 100}",11781
+spectral_centroid,all,0,"{'learning_rate': 0.1, 'max_depth': 8, 'n_estimators': 50}",176715
+spectral_centroid,performer,Performer2,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 50}",6786
+spectral_centroid,performer,Performer3,"{'learning_rate': 0.1, 'max_depth': 8, 'n_estimators': 50}",52326
+spectral_centroid,performer,Performer1,"{'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 100}",11781
